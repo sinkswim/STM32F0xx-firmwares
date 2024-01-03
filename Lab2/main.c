@@ -30,6 +30,7 @@
 TIM_TimeBaseInitTypeDef   	TIM_TimeBaseStructure;
 DAC_InitTypeDef           	DAC_InitStructure;
 DMA_InitTypeDef            	DMA_InitStructure;
+
 /* Waveform definitions: sinewave, escalator, square, triangle */
 const uint16_t Sine12bit[32] = {
                       2047, 2447, 2831, 3185, 3498, 3750, 3939, 4056, 4095, 4056,
@@ -48,12 +49,12 @@ void configureNVICforDMA(void);
 /* main() */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32f0xx.s) before to branch to application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f0xx.c file
-     */ 
+  /*! At this stage the microcontroller clock setting is already configured, 
+      this is done through SystemInit() function which is called from startup
+      file (startup_stm32f0xx.s) before to branch to application main.
+      To reconfigure the default setting of SystemInit() function, refer to
+      system_stm32f0xx.c file
+  */ 
 	 
   /* Preconfiguration before using DAC----------------------------------------*/
   DAC_Config();
@@ -194,51 +195,51 @@ int main(void)
 					STM_EVAL_LEDOn(LED4);
         }
 		
-				else if (SelectedWavesForm == 2){
-          /* Square wave generator -----------------------------------------*/
-          DAC_DeInit();
-          
-          /* DAC channel1 Configuration */
-          DAC_InitStructure.DAC_Trigger = DAC_Trigger_T2_TRGO;
-          DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
-					/* DMA1 channel3 configuration */
-          DMA_DeInit(DMA1_Channel3);	/* de-initialize DMA channel 3 */
-					DMA_InitStructure.DMA_PeripheralBaseAddr = DAC_DHR8R1_ADDRESS;
-          DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&Square8bit;
-          DMA_InitStructure.DMA_BufferSize = 6;
-          DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
-          DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
-					DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
-          DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-          DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-          DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-          DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-          DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
-					
-					DMA_Init(DMA1_Channel3, &DMA_InitStructure);
-					DMA_ITConfig(DMA1_Channel3, DMA_IT_TC, ENABLE);  /* enable external interrupts from the DMA channel 3  */
-			
-			
-					/*configure NVIC for DMA channel 3 */
-					configureNVICforDMA();
+			else if (SelectedWavesForm == 2){
+        /* Square wave generator -----------------------------------------*/
+        DAC_DeInit();
+        
+        /* DAC channel1 Configuration */
+        DAC_InitStructure.DAC_Trigger = DAC_Trigger_T2_TRGO;
+        DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
+        /* DMA1 channel3 configuration */
+        DMA_DeInit(DMA1_Channel3);	/* de-initialize DMA channel 3 */
+        DMA_InitStructure.DMA_PeripheralBaseAddr = DAC_DHR8R1_ADDRESS;
+        DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)&Square8bit;
+        DMA_InitStructure.DMA_BufferSize = 6;
+        DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+        DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+        DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
+        DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+        DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+        DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+        DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+        DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+        
+        DMA_Init(DMA1_Channel3, &DMA_InitStructure);
+        DMA_ITConfig(DMA1_Channel3, DMA_IT_TC, ENABLE);  /* enable external interrupts from the DMA channel 3  */
+    
+    
+        /*configure NVIC for DMA channel 3 */
+        configureNVICforDMA();
 
-          /* Enable DMA1 Channel2 */
-          DMA_Cmd(DMA1_Channel3, ENABLE);
+        /* Enable DMA1 Channel2 */
+        DMA_Cmd(DMA1_Channel3, ENABLE);
 
-          /* DAC channel1 Configuration */
-          DAC_Init(DAC_Channel_1, &DAC_InitStructure);
+        /* DAC channel1 Configuration */
+        DAC_Init(DAC_Channel_1, &DAC_InitStructure);
 
-          /* Enable DAC Channel1: Once the DAC channel1 is enabled, PA.04 is 
-             automatically connected to the DAC converter. */
-          DAC_Cmd(DAC_Channel_1, ENABLE);
+        /* Enable DAC Channel1: Once the DAC channel1 is enabled, PA.04 is 
+            automatically connected to the DAC converter. */
+        DAC_Cmd(DAC_Channel_1, ENABLE);
 
-          /* Enable DMA for DAC Channel1 */
-          DAC_DMACmd(DAC_Channel_1, ENABLE);
+        /* Enable DMA for DAC Channel1 */
+        DAC_DMACmd(DAC_Channel_1, ENABLE);
 
-					/* State is GREEN, again: Squarewave*/
-					STM_EVAL_LEDOff(LED4);
-					STM_EVAL_LEDOn(LED3);
-        }
+        /* State is GREEN, again: Squarewave*/
+        STM_EVAL_LEDOff(LED4);
+        STM_EVAL_LEDOn(LED3);
+      }
 	
 				else if (SelectedWavesForm == 3){
           /* triangle wave generator -----------------------------------------*/
